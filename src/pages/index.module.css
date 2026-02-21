@@ -1,0 +1,118 @@
+/* ============================================
+   HOMEPAGE STYLES
+   ============================================ */
+
+.hero {
+  min-height: calc(100vh - 60px - 4rem); /* 100vh minus navbar (60px) minus circuit-line top margin (4rem) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.heroContent {
+  text-align: center;
+}
+
+.heroTagline {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--white);
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.heroTerminal {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+
+.section {
+  padding: 6rem 1.5rem;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectionSubtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (min-width: 768px) {
+  .heroContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .heroContent {
+    text-align: left;
+  }
+
+  .heroSubtitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .heroButtons {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 5rem;
+  }
+
+  .section {
+    padding: 4rem 1rem;
+  }
+
+  .pillarsGrid {
+    grid-template-columns: 1fr;
+  }
+}

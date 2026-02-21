@@ -1,0 +1,58 @@
+[tools]
+node = "latest"
+python = "latest"
+# AWS CLI for S3/CloudFront deployment
+awscli = "latest"
+# SOPS for secrets encryption (pinned for reproducibility)
+"aqua:getsops/sops" = "3.11.0"
+# age encryption tool (backend for SOPS, pinned for reproducibility)
+"aqua:FiloSottile/age" = "1.3.1"
+# yq for parsing YAML secrets
+"aqua:mikefarah/yq" = "latest"
+
+[tasks.serve]
+description = "Start Docusaurus dev server on port 8000"
+run = "npm start -- --host 0.0.0.0 --port 8000"
+
+[tasks.build]
+description = "Build Docusaurus site for production"
+run = "npm run build"
+
+[tasks.aws_deploy]
+description = "Build and deploy website to S3 + invalidate CloudFront cache"
+run = """
+npm run build
+mise run aws_sync_s3
+mise run aws_invalidate_cache
+"""
+
+[tasks.deploy]
+depends = ["aws_deploy"]
+
+[tasks.aws_sync_s3]
+description = "Sync build/ to S3"
+run = """
+export AWS_ACCESS_KEY_ID=$(sops -d secrets.yaml | yq .aws_access_key_id)
+export AWS_SECRET_ACCESS_KEY=$(sops -d secrets.yaml | yq .aws_secret_access_key)
+export BUCKET=$(sops -d secrets.yaml | yq .s3_bucket)
+
+aws s3 sync build/ s3://${BUCKET}/ --delete
+"""
+
+[tasks.aws_invalidate_cache]
+description = "Invalidate CloudFront cache"
+run = """
+export AWS_ACCESS_KEY_ID=$(sops -d secrets.yaml | yq .aws_access_key_id)
+export AWS_SECRET_ACCESS_KEY=$(sops -d secrets.yaml | yq .aws_secret_access_key)
+export DIST_ID=$(sops -d secrets.yaml | yq .cloudfront_distribution_id)
+
+aws cloudfront create-invalidation --distribution-id ${DIST_ID} --paths "/*"
+"""
+
+[tasks.secrets_decrypt]
+description = "Decrypt secrets.yaml for viewing"
+run = "sops --decrypt secrets.yaml"
+
+[tasks.secrets_edit]
+description = "Edit encrypted secrets (requires SOPS_AGE_KEY)"
+run = "sops secrets.yaml"

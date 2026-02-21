@@ -1,0 +1,51 @@
+# Series tags - for multi-part blog post series
+series-nexus:
+  label: "Series: Building Nexus"
+  permalink: /series/nexus
+  description: Building the Nexus daemon from the ground up
+
+series-anvil:
+  label: "Series: Anvil Development"
+  permalink: /series/anvil
+  description: Developing the Anvil kernel build tool
+
+series-architecture:
+  label: "Series: Architecture Decisions"
+  permalink: /series/architecture
+  description: Deep dives into WorkFort architecture choices
+
+# Topic tags
+devlog:
+  label: DevLog
+  permalink: /devlog
+  description: Development logs and progress updates
+
+firecracker:
+  label: Firecracker
+  permalink: /firecracker
+  description: Posts about Firecracker microVMs
+
+rust:
+  label: Rust
+  permalink: /rust
+  description: Rust development and implementation
+
+golang:
+  label: Go
+  permalink: /golang
+  description: Go development and implementation
+
+architecture:
+  label: Architecture
+  permalink: /architecture
+  description: System architecture and design
+
+ai-teams:
+  label: AI Teams
+  permalink: /ai-teams
+  description: Working with AI agent teams
+
+workflow:
+  label: Workflow
+  permalink: /workflow
+  description: Development workflows and processes

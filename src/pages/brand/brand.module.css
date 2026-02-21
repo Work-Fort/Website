@@ -1,0 +1,212 @@
+.brandGuide {
+  padding: 4rem 0;
+  min-height: 100vh;
+}
+
+.intro {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4rem;
+}
+
+.section {
+  margin-bottom: 6rem;
+}
+
+.section h2 {
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+/* Color Grid */
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.colorCard {
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-light);
+  overflow: hidden;
+}
+
+.colorSwatch {
+  height: 150px;
+  width: 100%;
+}
+
+.colorInfo {
+  padding: 1.5rem;
+}
+
+.colorInfo h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--white);
+}
+
+.colorInfo code {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--cyan);
+  margin-bottom: 1rem;
+  background: transparent !important;
+  border: none !important;
+}
+
+.colorInfo p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Brand Assets */
+.brandAssets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.assetCard {
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-light);
+  padding: 2rem;
+}
+
+.assetCard h3 {
+  margin-top: 0;
+  color: var(--cyan);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.assetCard code {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--white);
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Typography Grid */
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.typeCard {
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-light);
+  padding: 2rem;
+}
+
+.typeCard h3 {
+  margin-top: 0;
+  color: var(--cyan);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.typeCard p:first-of-type {
+  margin: 1rem 0;
+}
+
+.typeCard p:last-of-type {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0;
+}
+
+/* Aesthetic Grid */
+.aestheticGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.aestheticCard {
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-light);
+  padding: 2rem;
+  clip-path: polygon(
+    0 0, calc(100% - 20px) 0,
+    100% 20px, 100% 100%,
+    20px 100%, 0 calc(100% - 20px)
+  );
+}
+
+.aestheticCard h3 {
+  margin-top: 0;
+  color: var(--cyan);
+  font-size: 1.1rem;
+}
+
+.aestheticCard p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Tone Content */
+.toneContent h3 {
+  color: var(--cyan);
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.toneContent h3:first-child {
+  margin-top: 0;
+}
+
+.toneContent p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+/* Pattern Grid */
+.patternGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.pattern {
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-light);
+  padding: 2rem;
+}
+
+.pattern h3 {
+  margin-top: 0;
+  color: var(--cyan);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+.pattern button {
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pattern a {
+  color: var(--cyan);
+}
+
+@media (max-width: 768px) {
+  .colorGrid,
+  .typeGrid,
+  .aestheticGrid,
+  .patternGrid {
+    grid-template-columns: 1fr;
+  }
+}

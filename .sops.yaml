@@ -1,0 +1,8 @@
+# SOPS encryption configuration
+# Uses age encryption (modern, simple, secure)
+# Public key will be set after age-keygen
+
+creation_rules:
+  - path_regex: secrets\.yaml$
+    age: >-
+      age1p6yq6k8mhp0f79hjh3n4wrekzszj9xhkefr7e7f3jdtalppww4yqp9egns
