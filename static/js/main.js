@@ -220,7 +220,14 @@ const initTerminal = () => {
 
     const demoLines = [
       { type: 'command', text: 'nexusctl vm from-rootfs alpine 3.21 --name alpine-vm' },
-      { type: 'output', text: '✓ VM alpine-vm ready', isSuccess: true },
+      { type: 'output', text: 'Downloading alpine-3.21-x86_64.tar.gz...', isSuccess: false },
+      { type: 'output', text: '✓ Downloaded 3.8 MiB', isSuccess: true },
+      { type: 'output', text: 'Building rootfs image...', isSuccess: false },
+      { type: 'output', text: '✓ Image built', isSuccess: true },
+      { type: 'output', text: 'Creating drive from image...', isSuccess: false },
+      { type: 'output', text: '✓ Drive created (btrfs snapshot)', isSuccess: true },
+      { type: 'output', text: 'Creating VM and attaching drive...', isSuccess: false },
+      { type: 'output', text: '✓ VM alpine-vm ready in 8.2s', isSuccess: true },
       { type: 'command', text: '' }
     ];
 
