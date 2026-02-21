@@ -10,6 +10,10 @@ awscli = "latest"
 # yq for parsing YAML secrets
 "aqua:mikefarah/yq" = "latest"
 
+[tasks.install]
+description = "Install Node.js dependencies"
+run = "npm ci"
+
 [tasks.serve]
 description = "Start Docusaurus dev server on port 8000"
 run = "npm start -- --host 0.0.0.0 --port 8000"
