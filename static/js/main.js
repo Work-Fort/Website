@@ -219,20 +219,16 @@ const initTerminal = () => {
     terminalBody.dataset.terminalInitialized = 'true';
 
     const demoLines = [
-      { type: 'command', text: 'nexusctl rootfs download alpine 3.21' },
-      { type: 'output', text: '✓ Downloaded alpine-3.21-x86_64.tar.gz', isSuccess: true },
-      { type: 'command', text: 'nexusctl template create --name alpine-base --source alpine-3.21' },
-      { type: 'output', text: '✓ Template alpine-base created', isSuccess: true },
-      { type: 'command', text: 'nexusctl build trigger alpine-base' },
-      { type: 'output', text: '✓ Build started (ID: bld_20260221)', isSuccess: true },
-      { type: 'command', text: 'nexusctl dr create --name dev-env --base alpine-base' },
-      { type: 'output', text: '✓ Drive dev-env created from alpine-base', isSuccess: true },
-      { type: 'command', text: 'nexusctl vm create agent-vm --vcpu 2 --mem 512' },
-      { type: 'output', text: '✓ VM agent-vm created (2 vCPU, 512 MiB)', isSuccess: true },
-      { type: 'command', text: 'nexusctl dr attach dev-env --vm agent-vm --root' },
-      { type: 'output', text: '✓ Drive dev-env attached as root device', isSuccess: true },
-      { type: 'command', text: 'nexusctl vm start agent-vm' },
-      { type: 'output', text: '✓ VM agent-vm started in 127ms', isSuccess: true },
+      { type: 'command', text: 'nexusctl vm from-rootfs alpine 3.21 --name agent-vm' },
+      { type: 'output', text: '✓ Downloading alpine-3.21-x86_64.tar.gz...', isSuccess: true },
+      { type: 'output', text: '✓ Building image...', isSuccess: true },
+      { type: 'output', text: '✓ Creating drive...', isSuccess: true },
+      { type: 'output', text: '✓ Creating VM (2 vCPU, 512 MiB)...', isSuccess: true },
+      { type: 'output', text: '✓ Attaching drive as root device...', isSuccess: true },
+      { type: 'output', text: '✓ VM agent-vm ready in 8.2s', isSuccess: true },
+      { type: 'command', text: 'nexusctl vm list' },
+      { type: 'output', text: 'ID            NAME       STATE    VCPU  MEM', isSuccess: false },
+      { type: 'output', text: '4nfv4y7kxh2lq agent-vm   ready    2     512', isSuccess: true },
       { type: 'command', text: '' }
     ];
 
