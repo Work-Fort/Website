@@ -219,13 +219,20 @@ const initTerminal = () => {
     terminalBody.dataset.terminalInitialized = 'true';
 
     const demoLines = [
-      { type: 'command', text: 'workfort vm create agent-1' },
-      { type: 'output', text: '✓ VM booted in 127ms', isSuccess: true },
-      { type: 'command', text: 'workfort vm snapshot agent-1' },
-      { type: 'output', text: '✓ Snapshot created', isSuccess: true },
-      { type: 'command', text: 'workfort vm list' },
-      { type: 'output', text: 'NAME      STATUS    IP            UPTIME', isSuccess: false },
-      { type: 'output', text: 'agent-1   running   172.16.0.2    2m 34s', isSuccess: true },
+      { type: 'command', text: 'nexusctl rootfs download alpine 3.21' },
+      { type: 'output', text: '✓ Downloaded alpine-3.21-x86_64.tar.gz', isSuccess: true },
+      { type: 'command', text: 'nexusctl template create --name alpine-base --source alpine-3.21' },
+      { type: 'output', text: '✓ Template alpine-base created', isSuccess: true },
+      { type: 'command', text: 'nexusctl build trigger alpine-base' },
+      { type: 'output', text: '✓ Build started (ID: bld_20260221)', isSuccess: true },
+      { type: 'command', text: 'nexusctl ws create --name dev-env --base alpine-base' },
+      { type: 'output', text: '✓ Drive dev-env created from alpine-base', isSuccess: true },
+      { type: 'command', text: 'nexusctl vm create agent-vm --vcpu 2 --mem 512' },
+      { type: 'output', text: '✓ VM agent-vm created (2 vCPU, 512 MiB)', isSuccess: true },
+      { type: 'command', text: 'nexusctl ws attach dev-env --vm agent-vm --root' },
+      { type: 'output', text: '✓ Drive dev-env attached as root device', isSuccess: true },
+      { type: 'command', text: 'nexusctl vm start agent-vm' },
+      { type: 'output', text: '✓ VM agent-vm started in 127ms', isSuccess: true },
       { type: 'command', text: '' }
     ];
 
