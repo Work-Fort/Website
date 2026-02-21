@@ -86,7 +86,7 @@ const config: Config = {
           showReadingTime: true,
           blogTitle: 'DevLog',
           blogDescription: 'Building WorkFort in public — infrastructure for AI agents',
-          tagsBasePath: 'dev-log',
+          tagsBasePath: 'tags',
           feedOptions: {
             type: ['rss', 'atom'],
             xslt: true,
