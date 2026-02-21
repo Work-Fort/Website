@@ -20,24 +20,25 @@ Each agent runs in its own microVM with its own kernel, filesystem, and network 
 
 ## Architecture
 
-```
-┌─────────────────────────────────────┐
-│  Host (Arch Linux, btrfs)           │
-│                                     │
-│  ┌──────────────────────────────┐  │
-│  │  Nexus Daemon (nexusd)       │  │
-│  │  - VM orchestration          │  │
-│  │  - vsock routing             │  │
-│  │  - State management          │  │
-│  └──────────────────────────────┘  │
-│           │         │               │
-│           ├─────────┼──────────┐    │
-│           │         │          │    │
-│  ┌────────▼──┐ ┌───▼──────┐ ┌─▼────┐
-│  │ Portal VM │ │ Work VM  │ │ ...  │
-│  │ (Agent)   │ │ (Tools)  │ └──────┘
-│  └───────────┘ └──────────┘         │
-└─────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Host["Host (Arch Linux, btrfs)"]
+        Nexus["Nexus Daemon (nexusd)<br/>• VM orchestration<br/>• vsock routing<br/>• State management"]
+
+        Nexus -.vsock.-> Portal["Portal VM<br/>(Agent)"]
+        Nexus -.vsock.-> Work["Work VM<br/>(Tools)"]
+        Nexus -.vsock.-> More["..."]
+
+        Portal -.btrfs snapshot.-> DriveP["Drive (CoW)"]
+        Work -.btrfs snapshot.-> DriveW["Drive (CoW)"]
+    end
+
+    style Nexus fill:#0cf,stroke:#09f,stroke-width:2px,color:#000
+    style Portal fill:#f90,stroke:#f60,stroke-width:2px,color:#000
+    style Work fill:#f90,stroke:#f60,stroke-width:2px,color:#000
+    style More fill:#f90,stroke:#f60,stroke-width:2px,color:#000
+    style DriveP fill:#6c6,stroke:#4a4,stroke-width:2px,color:#000
+    style DriveW fill:#6c6,stroke:#4a4,stroke-width:2px,color:#000
 ```
 
 ## Components
