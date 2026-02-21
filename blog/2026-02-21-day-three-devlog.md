@@ -13,11 +13,11 @@ WorkFort gives AI agents their own Firecracker microVMs with isolated workspaces
 
 ## The ID Refactor
 
-Every resource in Nexus (VMs, drives, images, templates) needs an identifier. We started with UUIDs — standard, boring, safe. The problem: UUIDs are terrible user experience. Try typing `nexusctl vm inspect 550e8400-e29b-41d4-a716-446655440000` without copy-paste.
+Every resource in Nexus (VMs, drives, images, templates) needs an identifier. We started with UUIDs — standard, boring, safe. The problem: UUIDs make terrible URLs. A VM inspect page at `/vms/550e8400-e29b-41d4-a716-446655440000` is 36 characters of noise.
 
-The solution: **base32-encoded integer IDs**. Auto-incrementing integers in SQLite, encoded as lowercase base32 for external display. A VM created as ID 42 shows up as `nexusctl vm list` output with ID `1a`. Short, typeable, unambiguous (no 0/O confusion). The internal implementation still uses integers for performance — base32 is purely a presentation layer.
+The solution: **base32-encoded integer IDs**. Random 63-bit integers stored in SQLite, encoded as lowercase base32 for external display. IDs look like `4nfv4y7kxh2lq` — 13 characters instead of 36. Shorter URLs, easier to share, no hyphens to trip over. The alphabet (a-z, 2-7) avoids ambiguous characters like 0/O/1/I. Integers internally for performance, base32 externally for compactness.
 
-This touched every layer of the stack: database schema, domain types, HTTP client, CLI output. Nine commits to thread it through cleanly. But now `nexusctl vm inspect 1a` works, and that's worth the churn.
+This touched every layer of the stack: database schema, domain types, HTTP client, CLI output. Nine commits to thread it through cleanly. The payoff is short URLs and less visual clutter.
 
 ## Workspace → Drive Rename
 
