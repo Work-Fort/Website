@@ -219,16 +219,8 @@ const initTerminal = () => {
     terminalBody.dataset.terminalInitialized = 'true';
 
     const demoLines = [
-      { type: 'command', text: 'nexusctl vm from-rootfs alpine 3.21 --name agent-vm' },
-      { type: 'output', text: '✓ Downloading alpine-3.21-x86_64.tar.gz...', isSuccess: true },
-      { type: 'output', text: '✓ Building image...', isSuccess: true },
-      { type: 'output', text: '✓ Creating drive...', isSuccess: true },
-      { type: 'output', text: '✓ Creating VM (2 vCPU, 512 MiB)...', isSuccess: true },
-      { type: 'output', text: '✓ Attaching drive as root device...', isSuccess: true },
-      { type: 'output', text: '✓ VM agent-vm ready in 8.2s', isSuccess: true },
-      { type: 'command', text: 'nexusctl vm list' },
-      { type: 'output', text: 'ID            NAME       STATE    VCPU  MEM', isSuccess: false },
-      { type: 'output', text: '4nfv4y7kxh2lq agent-vm   ready    2     512', isSuccess: true },
+      { type: 'command', text: 'nexusctl vm from-rootfs alpine 3.21 --name alpine-vm' },
+      { type: 'output', text: '✓ VM alpine-vm ready', isSuccess: true },
       { type: 'command', text: '' }
     ];
 
