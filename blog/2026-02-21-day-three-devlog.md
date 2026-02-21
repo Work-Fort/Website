@@ -55,7 +55,7 @@ The retrospective documented lessons: code reviewers should manually test critic
 
 ## CLI UX Research
 
-After building the primitives, we asked: **how would a new user actually use this?** The answer was uncomfortable. Getting from "I want a VM" to "VM is running" takes seven commands:
+After building the primitives, we evaluated nexusctl's user experience. The question: **how would a new user actually use this?** The answer was uncomfortable. Getting from "I want a VM" to "VM is running" takes seven commands and requires understanding the full primitive stack (rootfs → template → build → image → drive → vm).
 
 ```bash
 nexusctl rootfs download alpine 3.21
@@ -68,13 +68,26 @@ nexusctl dr attach my-drive --vm my-vm --root
 nexusctl vm start my-vm
 ```
 
-That's a lot of plumbing to expose. The primitives are correct — each command does one thing well, and they compose for automation. But for interactive use, seven commands is too many.
+The cognitive load is high. Information gets repeated (alpine, 3.21, base). The user types the same names multiple times. And the goal — "I want a VM running Alpine" — gets buried under infrastructure commands.
 
-The solution (in design, not yet implemented): **universal `from-*` shortcuts** across resources. Want a VM from a rootfs tarball? `nexusctl vm from-rootfs alpine 3.21` handles the full pipeline (build image, create drive, create VM, attach drive, return VM). Want just a reusable drive? `nexusctl dr from-rootfs alpine 3.21` stops at drive creation. Want a base image for multiple drives? `nexusctl image from-rootfs alpine 3.21`.
+The insight: nexusctl is a **low-level primitive layer**, like the docker CLI. Higher-level orchestration tools will come later. But primitives alone optimize for the wrong use case. We're building for AI agents, not enterprise infrastructure catalogs. Time-to-value matters more than theoretical reusability.
 
-Same pattern, different depth of automation based on what you're creating. The primitives stay — power users and scripts will use them. But new users get a fast path to value.
+The solution (designed, not yet implemented): **universal `from-*` shortcuts** across resources. Start from what you want:
 
-This is documented in the CLI architecture now, filed as an enhancement issue, awaiting TPM triage.
+```bash
+# Want a VM? Start from VM
+nexusctl vm from-rootfs alpine 3.21
+
+# Want a reusable drive? Start from drive
+nexusctl dr from-rootfs alpine 3.21
+
+# Want a base image? Start from image
+nexusctl image from-rootfs alpine 3.21
+```
+
+Same pattern, different automation depth. Each resource's `from-*` command handles the appropriate primitives. The seven-command workflow becomes one. Power users still have the primitives for fine-grained control. New users get a fast path.
+
+This is documented in the CLI architecture, filed as an enhancement issue, awaiting prioritization.
 
 ## Anvil Improvements
 
