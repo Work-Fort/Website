@@ -32,6 +32,7 @@ function HomepageHero() {
           <p className={styles.heroSubtitle}>
             A daemon that gives AI agents isolated workspaces with full system access.
             Firecracker microVMs, not containers. Pacman install on Arch.
+            {/* Test deployment: 2026-02-21 17:10 UTC */}
           </p>
 
           <div className={styles.heroButtons}>
