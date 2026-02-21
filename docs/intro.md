@@ -77,6 +77,6 @@ Follow development in the [DevLog](/blog).
 
 ## Next Steps
 
-- Read the [Architecture docs](./architecture) for technical details
 - Check the [GitHub repository](https://github.com/Work-Fort/Nexus) for source code
 - Join the [Discord](https://discord.gg/WMAHUG8RkN) community
+- Read the [DevLog](/blog) to follow development progress
