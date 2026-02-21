@@ -68,6 +68,12 @@ const config: Config = {
     require.resolve('./src/client/homepageClass.ts'),
   ],
 
+  markdown: {
+    mermaid: true,
+  },
+
+  themes: ['@docusaurus/theme-mermaid'],
+
   presets: [
     [
       'classic',
