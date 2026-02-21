@@ -156,7 +156,7 @@ const config: Config = {
           items: [
             {
               label: 'Discord',
-              href: 'https://discord.gg/workfort',
+              href: 'https://discord.gg/WMAHUG8RkN',
             },
           ],
         },

@@ -79,4 +79,4 @@ Follow development in the [DevLog](/blog).
 
 - Read the [Architecture docs](./architecture) for technical details
 - Check the [GitHub repository](https://github.com/Work-Fort/Nexus) for source code
-- Join the [Discord](https://discord.gg/workfort) community
+- Join the [Discord](https://discord.gg/WMAHUG8RkN) community
