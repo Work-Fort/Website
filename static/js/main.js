@@ -25,7 +25,9 @@ class TerminalTyper {
     
     for (let i = 0; i < this.lines.length; i++) {
       await this.typeLine(this.lines[i]);
-      await this.delay(this.lineDelay);
+      // Use per-line delay if specified, otherwise use default
+      const delay = this.lines[i].delay !== undefined ? this.lines[i].delay : this.lineDelay;
+      await this.delay(delay);
     }
     
     this.isTyping = false;
@@ -219,18 +221,18 @@ const initTerminal = () => {
     terminalBody.dataset.terminalInitialized = 'true';
 
     const demoLines = [
-      { type: 'command', text: 'nexusctl vm from-rootfs alpine 3.23 --name alpine-vm' },
-      { type: 'output', text: 'Downloading alpine-3.23-x86_64.tar.gz...', isSuccess: false },
-      { type: 'output', text: '✓ Downloaded 4.0 MiB', isSuccess: true },
-      { type: 'output', text: 'Verifying checksums...', isSuccess: false },
-      { type: 'output', text: '✓ Checksums verified', isSuccess: true },
-      { type: 'output', text: 'Building rootfs image...', isSuccess: false },
-      { type: 'output', text: '✓ Image built', isSuccess: true },
-      { type: 'output', text: 'Creating drive from image...', isSuccess: false },
-      { type: 'output', text: '✓ Drive created (btrfs snapshot)', isSuccess: true },
-      { type: 'output', text: 'Creating VM and attaching drive...', isSuccess: false },
-      { type: 'output', text: '✓ VM alpine-vm ready in 130ms', isSuccess: true },
-      { type: 'command', text: '' }
+      { type: 'command', text: 'nexusctl vm from-rootfs alpine 3.23 --name alpine-vm', delay: 200 },
+      { type: 'output', text: 'Downloading alpine-3.23-x86_64.tar.gz...', isSuccess: false, delay: 4000 },
+      { type: 'output', text: '✓ Downloaded 4.0 MiB', isSuccess: true, delay: 100 },
+      { type: 'output', text: 'Verifying checksums...', isSuccess: false, delay: 2000 },
+      { type: 'output', text: '✓ Checksums verified', isSuccess: true, delay: 100 },
+      { type: 'output', text: 'Building rootfs image...', isSuccess: false, delay: 200 },
+      { type: 'output', text: '✓ Image built', isSuccess: true, delay: 100 },
+      { type: 'output', text: 'Creating drive from image...', isSuccess: false, delay: 200 },
+      { type: 'output', text: '✓ Drive created (btrfs snapshot)', isSuccess: true, delay: 100 },
+      { type: 'output', text: 'Creating VM and attaching drive...', isSuccess: false, delay: 200 },
+      { type: 'output', text: '✓ VM alpine-vm ready in 130ms', isSuccess: true, delay: 0 },
+      { type: 'command', text: '', delay: 0 }
     ];
 
     const typer = new TerminalTyper(terminalBody, {
