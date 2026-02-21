@@ -89,11 +89,15 @@ Same pattern, different automation depth. Each resource's `from-*` command handl
 
 This is documented in the CLI architecture, filed as an enhancement issue, awaiting prioritization.
 
-## Anvil Improvements
+## Who Said Kernel Builds Were Multi-Hour???
 
-Anvil (the kernel build service) got smarter about CI. Previously, the GitHub Actions workflow that verified kernel versions were buildable used fragile shell checksums to detect whether Anvil's CLI had changed. Now it uses a cached binary from the release workflow — cleaner, faster, no shell parsing.
+Anvil builds Firecracker-compatible Linux kernels in **5 minutes locally, 8-15 minutes on CI runners**. Not hours. Not even close. The kernel is stripped down (no modules, no desktop drivers, no compatibility layers), optimized for microVM boot speed, and built with a focused config.
 
-Anvil also gained a `version-check` command: query kernel.org to verify a version exists and is buildable before starting a multi-hour compile. Useful for CI, useful for debugging.
+This matters because fast iteration on kernel changes is critical. Need to test a new config option? Five minutes. Need to verify a kernel version works with Firecracker? Eight minutes in CI. The automated builder checks kernel.org every 4 hours and can build new stable releases before most people notice they exist.
+
+Beyond speed, Anvil also got smarter about CI. The GitHub Actions workflow that verifies kernel versions now uses a cached binary from the release workflow instead of fragile shell checksums. Cleaner, faster, no shell parsing.
+
+Anvil also gained a `version-check` command: query kernel.org to verify a version exists and is buildable before starting a compile. Useful for CI, useful for debugging, useful for avoiding wasted build time.
 
 ## What's Next
 
