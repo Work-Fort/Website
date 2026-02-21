@@ -37,7 +37,7 @@ The vsock connection is bidirectional: Nexus can detect if a VM becomes unreacha
 
 ## VM State History
 
-`nexusctl vm inspect` shows current state. What about past states? Step 10.4 added a **state history table** that records every transition: `created` → `running` at timestamp X, `running` → `stopped` at timestamp Y. This unlocks debugging ("when did this VM crash?") and audit trails.
+`nexusctl vm inspect` shows current state. What about past states? Step 10.1 added a **state history table** that records every transition: `created` → `running` at timestamp X, `running` → `stopped` at timestamp Y. This unlocks debugging ("when did this VM crash?") and audit trails.
 
 The new command: `nexusctl vm history my-vm` renders a table of transitions. Simple, but critical for understanding what's happening to VMs over time.
 
@@ -89,19 +89,15 @@ Same pattern, different automation depth. Each resource's `from-*` command handl
 
 This is documented in the CLI architecture, filed as an enhancement issue, awaiting prioritization.
 
-## Who Said Kernel Builds Were Multi-Hour???
+## Anvil Improvements
 
-Anvil builds Firecracker-compatible Linux kernels in **5 minutes locally, 8-15 minutes on CI runners**. Not hours. Not even close. The kernel is stripped down (no modules, no desktop drivers, no compatibility layers), optimized for microVM boot speed, and built with a focused config.
+Anvil (the kernel build service) got smarter about CI. The GitHub Actions workflow that verifies kernel versions now uses a cached binary from the release workflow instead of fragile shell checksums. Cleaner, faster, no shell parsing.
 
-This matters because fast iteration on kernel changes is critical. Need to test a new config option? Five minutes. Need to verify a kernel version works with Firecracker? Eight minutes in CI. The automated builder checks kernel.org every 4 hours and can build new stable releases before most people notice they exist.
-
-Beyond speed, Anvil also got smarter about CI. The GitHub Actions workflow that verifies kernel versions now uses a cached binary from the release workflow instead of fragile shell checksums. Cleaner, faster, no shell parsing.
-
-Anvil also gained a `version-check` command: query kernel.org to verify a version exists and is buildable before starting a compile. Useful for CI, useful for debugging, useful for avoiding wasted build time.
+Anvil also gained a `version-check` command: query kernel.org to verify a version exists and is buildable before triggering a build. Useful for CI, useful for debugging.
 
 ## What's Next
 
-Step 10.5 is underway: display IDs in list commands. Right now `nexusctl vm list` and `nexusctl dr list` show names but not IDs. After base32 encoding, showing IDs is actually useful (they're short). This unblocks name-or-ID resolution everywhere — users can pass either, and the CLI figures it out.
+Step 10.4 completed: display IDs in list commands. `nexusctl vm list`, `nexusctl dr list`, and `nexusctl image list` now show base32 IDs alongside names. After base32 encoding, showing IDs is actually useful — they're short (13 characters instead of 36). This enables name-or-ID resolution everywhere: users can pass either, and the CLI figures it out.
 
 Beyond step 10: networking (tap devices for outbound connections), MCP routing over vsock, and the self-hosting milestone — WorkFort building WorkFort.
 
