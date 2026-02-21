@@ -210,8 +210,14 @@ const initNavigation = () => {
 
 const initTerminal = () => {
   const terminalBody = document.querySelector('.terminal-body[data-terminal]');
-  
+
   if (terminalBody) {
+    // Skip if already initialized
+    if (terminalBody.dataset.terminalInitialized === 'true') {
+      return;
+    }
+    terminalBody.dataset.terminalInitialized = 'true';
+
     const demoLines = [
       { type: 'command', text: 'workfort vm create agent-1' },
       { type: 'output', text: '✓ VM booted in 127ms', isSuccess: true },
@@ -222,13 +228,13 @@ const initTerminal = () => {
       { type: 'output', text: 'agent-1   running   172.16.0.2    2m 34s', isSuccess: true },
       { type: 'command', text: '' }
     ];
-    
+
     const typer = new TerminalTyper(terminalBody, {
       lines: demoLines,
       typingSpeed: 40,
       lineDelay: 600
     });
-    
+
     // Start typing when terminal is visible
     const terminalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -238,7 +244,7 @@ const initTerminal = () => {
         }
       });
     }, { threshold: 0.5 });
-    
+
     terminalObserver.observe(terminalBody);
   }
 };
@@ -286,10 +292,14 @@ const updateScanlinePosition = () => {
 // GLITCH EFFECTS INITIALIZATION
 // ============================================
 
+// Track if scanline interval is running
+let scanlineIntervalId = null;
+
 const initGlitchEffects = () => {
   // Logo glitch on hover
   const logo = document.querySelector('.nav-logo.glitch');
-  if (logo) {
+  if (logo && !logo.dataset.glitchInitialized) {
+    logo.dataset.glitchInitialized = 'true';
     logo.addEventListener('mouseenter', () => {
       logo.classList.add('glitching');
     });
@@ -298,12 +308,20 @@ const initGlitchEffects = () => {
     });
   }
 
-  // Start scanline position tracking
-  setInterval(updateScanlinePosition, 16); // ~60fps
+  // Start scanline position tracking (only once)
+  if (!scanlineIntervalId) {
+    scanlineIntervalId = setInterval(updateScanlinePosition, 16); // ~60fps
+  }
 
   // Random glitch effect - use dedicated data attribute for robustness
   // This selector won't break when copy changes
   const initGlitchElement = (element) => {
+    // Skip if already initialized
+    if (element.dataset.glitchInitialized === 'true') {
+      return;
+    }
+    element.dataset.glitchInitialized = 'true';
+
     const glitcher = new GlitchEffect(element);
 
     // Read frequency from data attribute (no defaults - must be explicitly set)
@@ -337,13 +355,16 @@ const initGlitchEffects = () => {
 
   // Initialize all elements marked for glitch effect
   document.querySelectorAll('[data-glitch-effect="true"]').forEach(initGlitchElement);
-  
+
   // Post title glitch
   document.querySelectorAll('.post-title.glitch').forEach(title => {
-    const glitcher = new GlitchEffect(title);
-    title.addEventListener('mouseenter', () => {
-      glitcher.trigger();
-    });
+    if (title.dataset.glitchInitialized !== 'true') {
+      title.dataset.glitchInitialized = 'true';
+      const glitcher = new GlitchEffect(title);
+      title.addEventListener('mouseenter', () => {
+        glitcher.trigger();
+      });
+    }
   });
 };
 
@@ -478,6 +499,9 @@ function initAll() {
   // Add loaded class to body for CSS transitions
   document.body.classList.add('loaded');
 }
+
+// Expose to window for Docusaurus client module to call on route changes
+window.initAll = initAll;
 
 // Try multiple times to ensure React has hydrated
 document.addEventListener('DOMContentLoaded', () => {

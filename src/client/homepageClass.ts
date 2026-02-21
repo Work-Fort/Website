@@ -66,6 +66,12 @@ export default (function () {
   return {
     onRouteDidUpdate() {
       addHomepageClass();
+
+      // Reinitialize animations if window.initAll exists (from main.js)
+      if (typeof (window as any).initAll === 'function') {
+        console.log('[Homepage Class] Reinitializing animations on route change');
+        (window as any).initAll();
+      }
     },
   };
 })();
