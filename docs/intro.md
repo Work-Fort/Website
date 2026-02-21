@@ -2,46 +2,81 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+WorkFort is infrastructure for AI agents. Each agent gets its own Firecracker microVM — a private workspace with full system access — managed by the Nexus daemon.
 
-## Getting Started
+## What is WorkFort?
 
-Get started by **creating a new site**.
+AI agent frameworks give agents chat and tools. WorkFort gives them a computer.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+WorkFort provides:
+- **Firecracker microVMs** for hardware-level isolation (not containers)
+- **btrfs workspaces** for instant snapshots and rollback
+- **vsock communication** for secure host-VM messaging
+- **Centralized control** via Nexus daemon for observability and policy
 
-### What you'll need
+Each agent runs in its own microVM with its own kernel, filesystem, and network stack. True isolation that containers can't match.
 
-- [Node.js](https://nodejs.org/en/download/) version 20.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+## Architecture
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
+```
+┌─────────────────────────────────────┐
+│  Host (Arch Linux, btrfs)           │
+│                                     │
+│  ┌──────────────────────────────┐  │
+│  │  Nexus Daemon (nexusd)       │  │
+│  │  - VM orchestration          │  │
+│  │  - vsock routing             │  │
+│  │  - State management          │  │
+│  └──────────────────────────────┘  │
+│           │         │               │
+│           ├─────────┼──────────┐    │
+│           │         │          │    │
+│  ┌────────▼──┐ ┌───▼──────┐ ┌─▼────┐
+│  │ Portal VM │ │ Work VM  │ │ ...  │
+│  │ (Agent)   │ │ (Tools)  │ └──────┘
+│  └───────────┘ └──────────┘         │
+└─────────────────────────────────────┘
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+## Components
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+### Nexus Daemon (`nexusd`)
+- Manages VM lifecycle (create, start, stop, destroy)
+- Routes vsock messages between VMs
+- Tracks state in SQLite
+- Enforces security policies
 
-## Start your site
+### Nexus CLI (`nexusctl`)
+- Command-line interface for Nexus
+- Communicates with daemon via HTTP
+- Manages VMs, images, and workspaces
 
-Run the development server:
+### Guest Agent
+- Runs inside Work VMs
+- Exposes MCP (Model Context Protocol) tools
+- Provides file operations, command execution
+- No credentials — all auth happens in Nexus
 
-```bash
-cd my-website
-npm run start
-```
+## Why Firecracker?
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+Firecracker provides hypervisor-level isolation:
+- Each VM has its own kernel
+- No shared kernel namespaces
+- No container escape vectors
+- Lightweight: boots in ~125ms
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+Docker and containers share the host kernel. WorkFort gives each agent its own kernel for true isolation.
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+## Status
+
+WorkFort is in alpha development. The Nexus daemon can boot Firecracker VMs with Alpine Linux rootfs. Guest agent and MCP tool routing are in progress.
+
+Follow development in the [DevLog](/blog).
+
+## Next Steps
+
+- Read the [Architecture docs](./architecture) for technical details
+- Check the [GitHub repository](https://github.com/Work-Fort/Nexus) for source code
+- Join the [Discord](https://discord.gg/workfort) community

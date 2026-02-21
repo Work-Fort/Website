@@ -141,18 +141,22 @@ function QuickInstall() {
             <div className="terminal-body">
               <div className="terminal-line">
                 <span className="terminal-prompt">$</span>
-                <span className="terminal-command">pacman -S workfort</span>
+                <span className="terminal-command">pacman -S nexus</span>
               </div>
               <div className="terminal-line">
                 <span className="terminal-prompt">$</span>
-                <span className="terminal-command">workfort daemon start</span>
+                <span className="terminal-command">systemctl --user start nexus</span>
+              </div>
+              <div className="terminal-line">
+                <span className="terminal-prompt">$</span>
+                <span className="terminal-command">nexusctl vm create agent-vm</span>
               </div>
             </div>
           </div>
 
           <p style={{textAlign: 'center', color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem'}}>
-            Also available as a static binary for any Linux distro.{' '}
-            <Link to="/docs/intro">View all install options →</Link>
+            Nexus daemon + CLI. Static Rust binary, portable across distros.{' '}
+            <Link to="/docs/intro">View docs →</Link>
           </p>
         </div>
       </section>
