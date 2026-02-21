@@ -49,3 +49,8 @@ workflow:
   label: Workflow
   permalink: /workflow
   description: Development workflows and processes
+
+ux:
+  label: User Experience
+  permalink: /ux
+  description: User experience and interface design
