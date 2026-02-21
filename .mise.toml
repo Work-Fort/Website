@@ -14,6 +14,10 @@ awscli = "latest"
 description = "Install Node.js dependencies"
 run = "npm ci"
 
+[tasks.update]
+description = "Update package-lock.json (use after changing package.json)"
+run = "npm install"
+
 [tasks.serve]
 description = "Start Docusaurus dev server on port 8000"
 run = "npm start -- --host 0.0.0.0 --port 8000"
