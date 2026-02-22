@@ -115,3 +115,25 @@ run = """
 export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image-hunyuan.py "$@" --size 1024x1024
 """
+
+# Google Gemini 2.5 Flash Image (nano-banana)
+[tasks."nanobana:gen-hero"]
+description = "Generate hero image with Gemini 2.5 Flash Image (1792x1024) - Usage: mise run nanobana:gen-hero -- --prompt 'text' --output 'path'"
+run = """
+export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
+python scripts/generate-image-nanobana.py "$@" --size 1792x1024
+"""
+
+[tasks."nanobana:gen-avatar"]
+description = "Generate avatar with Gemini 2.5 Flash Image (1024x1024) - Usage: mise run nanobana:gen-avatar -- --prompt 'text' --output 'path'"
+run = """
+export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
+python scripts/generate-image-nanobana.py "$@" --size 1024x1024
+"""
+
+[tasks."nanobana:gen-featured"]
+description = "Generate featured image with Gemini 2.5 Flash Image (1792x1024) - Usage: mise run nanobana:gen-featured -- --prompt 'text' --output 'path'"
+run = """
+export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
+python scripts/generate-image-nanobana.py "$@" --size 1792x1024
+"""
