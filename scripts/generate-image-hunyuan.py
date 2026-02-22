@@ -19,6 +19,13 @@ except ImportError:
     print("Error: requests package not installed. Run: pip install requests", file=sys.stderr)
     sys.exit(1)
 
+# Import prompt enhancement utility
+try:
+    from enhance_prompt import enhance_prompt
+except ImportError:
+    print("Error: enhance_prompt module not found", file=sys.stderr)
+    sys.exit(1)
+
 
 def submit_generation(api_key: str, prompt: str, size: str = "1024x1024", seed: int = -1) -> str:
     """Submit image generation request and return task_id."""
@@ -153,12 +160,19 @@ def main():
         )
         sys.exit(1)
 
+    # Enhance prompt using Kimi K2.5
+    try:
+        enhanced_prompt = enhance_prompt(args.prompt, api_key)
+    except Exception as e:
+        print(f"Warning: Prompt enhancement failed, using original prompt. {e}", file=sys.stderr)
+        enhanced_prompt = args.prompt
+
     try:
         # Convert size from "1024x1024" to "1024*1024" (Novita API format)
         size_novita = args.size.replace("x", "*")
 
-        # Submit generation request
-        task_id = submit_generation(api_key, args.prompt, size_novita, args.seed)
+        # Submit generation request with enhanced prompt
+        task_id = submit_generation(api_key, enhanced_prompt, size_novita, args.seed)
 
         # Poll for results
         image_url = get_task_result(api_key, task_id, args.timeout)

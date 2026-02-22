@@ -72,11 +72,12 @@ run = "sops secrets.yaml"
 description = "Install Python dependencies for image generation"
 run = "pip install --quiet openai requests"
 
-# OpenAI DALL-E 3 image generation
+# OpenAI DALL-E 3 image generation (with Kimi K2.5 prompt enhancement)
 [tasks."openai:gen-hero"]
 description = "Generate hero image with DALL-E 3 (1792x1024) - Usage: mise run openai:gen-hero -- --prompt 'text' --output 'path'"
 run = """
 export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image.py "$@" --size 1792x1024 --quality standard
 """
 
@@ -84,6 +85,7 @@ python scripts/generate-image.py "$@" --size 1792x1024 --quality standard
 description = "Generate avatar with DALL-E 3 (1024x1024, HD) - Usage: mise run openai:gen-avatar -- --prompt 'text' --output 'path'"
 run = """
 export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image.py "$@" --size 1024x1024 --quality hd
 """
 
@@ -91,6 +93,7 @@ python scripts/generate-image.py "$@" --size 1024x1024 --quality hd
 description = "Generate featured image with DALL-E 3 (1024x1024) - Usage: mise run openai:gen-featured -- --prompt 'text' --output 'path'"
 run = """
 export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image.py "$@" --size 1024x1024 --quality standard
 """
 
@@ -116,11 +119,12 @@ export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image-hunyuan.py "$@" --size 1024x1024
 """
 
-# Google Gemini 2.5 Flash Image (nano-banana)
+# Google Gemini 2.5 Flash Image (nano-banana) with Kimi K2.5 prompt enhancement
 [tasks."nanobana:gen-hero"]
 description = "Generate hero image with Gemini 2.5 Flash Image (1792x1024) - Usage: mise run nanobana:gen-hero -- --prompt 'text' --output 'path'"
 run = """
 export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image-nanobana.py "$@" --size 1792x1024
 """
 
@@ -128,6 +132,7 @@ python scripts/generate-image-nanobana.py "$@" --size 1792x1024
 description = "Generate avatar with Gemini 2.5 Flash Image (1024x1024) - Usage: mise run nanobana:gen-avatar -- --prompt 'text' --output 'path'"
 run = """
 export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image-nanobana.py "$@" --size 1024x1024
 """
 
@@ -135,5 +140,6 @@ python scripts/generate-image-nanobana.py "$@" --size 1024x1024
 description = "Generate featured image with Gemini 2.5 Flash Image (1792x1024) - Usage: mise run nanobana:gen-featured -- --prompt 'text' --output 'path'"
 run = """
 export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image-nanobana.py "$@" --size 1792x1024
 """

@@ -24,6 +24,13 @@ except ImportError:
     print("Error: requests package not installed. Run: pip install requests", file=sys.stderr)
     sys.exit(1)
 
+# Import prompt enhancement utility
+try:
+    from enhance_prompt import enhance_prompt
+except ImportError:
+    print("Error: enhance_prompt module not found", file=sys.stderr)
+    sys.exit(1)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Generate images using OpenAI DALL-E")
@@ -54,8 +61,10 @@ def main():
 
     args = parser.parse_args()
 
-    # Get OpenAI API key from environment
+    # Get API keys from environment
     api_key = os.environ.get("OPENAI_API_KEY")
+    novita_api_key = os.environ.get("NOVITA_API_KEY")
+
     if not api_key:
         print(
             "Error: OPENAI_API_KEY environment variable not set",
@@ -67,17 +76,35 @@ def main():
         )
         sys.exit(1)
 
+    if not novita_api_key:
+        print(
+            "Error: NOVITA_API_KEY environment variable not set",
+            file=sys.stderr,
+        )
+        print(
+            "Run: export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Enhance prompt using Kimi K2.5
+    try:
+        enhanced_prompt = enhance_prompt(args.prompt, novita_api_key)
+    except Exception as e:
+        print(f"Warning: Prompt enhancement failed, using original prompt. {e}", file=sys.stderr)
+        enhanced_prompt = args.prompt
+
     # Initialize OpenAI client
     client = OpenAI(api_key=api_key)
 
-    print(f"Generating image with prompt: {args.prompt}")
+    print(f"Generating image with enhanced prompt")
     print(f"Size: {args.size}, Quality: {args.quality}, Model: {args.model}")
 
     try:
-        # Generate image
+        # Generate image with enhanced prompt
         response = client.images.generate(
             model=args.model,
-            prompt=args.prompt,
+            prompt=enhanced_prompt,
             size=args.size,
             quality=args.quality,
             n=1,
