@@ -10,6 +10,9 @@ awscli = "latest"
 # yq for parsing YAML secrets
 "aqua:mikefarah/yq" = "latest"
 
+[env]
+_.file = ".env.local"
+
 [tasks.install]
 description = "Install Node.js dependencies"
 run = "npm ci"
@@ -64,3 +67,28 @@ run = "sops --decrypt secrets.yaml"
 [tasks.secrets_edit]
 description = "Edit encrypted secrets (requires SOPS_AGE_KEY)"
 run = "sops secrets.yaml"
+
+[tasks.python_deps]
+description = "Install Python dependencies for image generation"
+run = "pip install --quiet openai requests"
+
+[tasks.image_hero]
+description = "Generate a hero image for blog posts (1792x1024) - Usage: mise run image_hero -- --prompt 'text' --output 'path'"
+run = """
+export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
+python scripts/generate-image.py "$@" --size 1792x1024 --quality standard
+"""
+
+[tasks.image_avatar]
+description = "Generate an avatar image (1024x1024) - Usage: mise run image_avatar -- --prompt 'text' --output 'path'"
+run = """
+export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
+python scripts/generate-image.py "$@" --size 1024x1024 --quality hd
+"""
+
+[tasks.image_featured]
+description = "Generate a featured/social share image (1024x1024) - Usage: mise run image_featured -- --prompt 'text' --output 'path'"
+run = """
+export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
+python scripts/generate-image.py "$@" --size 1024x1024 --quality standard
+"""
