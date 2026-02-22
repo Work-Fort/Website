@@ -68,27 +68,50 @@ run = "sops --decrypt secrets.yaml"
 description = "Edit encrypted secrets (requires SOPS_AGE_KEY)"
 run = "sops secrets.yaml"
 
-[tasks.python_deps]
+[tasks.python-deps]
 description = "Install Python dependencies for image generation"
 run = "pip install --quiet openai requests"
 
-[tasks.image_hero]
-description = "Generate a hero image for blog posts (1792x1024) - Usage: mise run image_hero -- --prompt 'text' --output 'path'"
+# OpenAI DALL-E 3 image generation
+[tasks."openai:gen-hero"]
+description = "Generate hero image with DALL-E 3 (1792x1024) - Usage: mise run openai:gen-hero -- --prompt 'text' --output 'path'"
 run = """
 export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
 python scripts/generate-image.py "$@" --size 1792x1024 --quality standard
 """
 
-[tasks.image_avatar]
-description = "Generate an avatar image (1024x1024) - Usage: mise run image_avatar -- --prompt 'text' --output 'path'"
+[tasks."openai:gen-avatar"]
+description = "Generate avatar with DALL-E 3 (1024x1024, HD) - Usage: mise run openai:gen-avatar -- --prompt 'text' --output 'path'"
 run = """
 export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
 python scripts/generate-image.py "$@" --size 1024x1024 --quality hd
 """
 
-[tasks.image_featured]
-description = "Generate a featured/social share image (1024x1024) - Usage: mise run image_featured -- --prompt 'text' --output 'path'"
+[tasks."openai:gen-featured"]
+description = "Generate featured image with DALL-E 3 (1024x1024) - Usage: mise run openai:gen-featured -- --prompt 'text' --output 'path'"
 run = """
 export OPENAI_API_KEY=$(sops -d secrets.yaml | yq .openai_api_key)
 python scripts/generate-image.py "$@" --size 1024x1024 --quality standard
+"""
+
+# Hunyuan Image 3 (via Novita.ai)
+[tasks."hunyuan:gen-hero"]
+description = "Generate hero image with Hunyuan Image 3 (1536x1024) - Usage: mise run hunyuan:gen-hero -- --prompt 'text' --output 'path'"
+run = """
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
+python scripts/generate-image-hunyuan.py "$@" --size 1536x1024
+"""
+
+[tasks."hunyuan:gen-avatar"]
+description = "Generate avatar with Hunyuan Image 3 (1024x1024) - Usage: mise run hunyuan:gen-avatar -- --prompt 'text' --output 'path'"
+run = """
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
+python scripts/generate-image-hunyuan.py "$@" --size 1024x1024
+"""
+
+[tasks."hunyuan:gen-featured"]
+description = "Generate featured image with Hunyuan Image 3 (1024x1024) - Usage: mise run hunyuan:gen-featured -- --prompt 'text' --output 'path'"
+run = """
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
+python scripts/generate-image-hunyuan.py "$@" --size 1024x1024
 """
