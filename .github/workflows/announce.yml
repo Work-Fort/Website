@@ -1,0 +1,84 @@
+name: "Announce New Blog Posts"
+
+on:
+  workflow_run:
+    workflows: ["Deploy Website"]
+    types:
+      - completed
+    branches:
+      - main
+      - master
+
+jobs:
+  announce:
+    name: "Announce to Discord"
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect new blog posts
+        id: detect
+        run: |
+          # Find blog markdown files added in the latest commit
+          NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'blog/*.md' | grep -v 'authors.yml\|tags.yml' || true)
+
+          if [ -z "$NEW_POSTS" ]; then
+            echo "No new blog posts found"
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "found=true" >> "$GITHUB_OUTPUT"
+
+          # Use the first new post (usually only one per push)
+          POST_FILE=$(echo "$NEW_POSTS" | head -1)
+          echo "file=$POST_FILE" >> "$GITHUB_OUTPUT"
+
+          # Extract frontmatter fields
+          TITLE=$(sed -n 's/^title: *"\(.*\)"/\1/p' "$POST_FILE" | head -1)
+          SLUG=$(sed -n 's/^slug: *//p' "$POST_FILE" | head -1)
+          IMAGE=$(sed -n 's/^image: *//p' "$POST_FILE" | head -1)
+
+          # Extract description from first paragraph after truncate marker
+          DESCRIPTION=$(sed -n '/<!--truncate-->/,/^$/{ /<!--truncate-->/d; /^$/d; p; }' "$POST_FILE" | head -5 | tr '\n' ' ' | sed 's/  */ /g' | cut -c1-300)
+
+          # Build the URL
+          URL="https://www.workfort.dev/blog/${SLUG}/"
+
+          # Build full image URL if relative
+          if [ -n "$IMAGE" ]; then
+            IMAGE_URL="https://www.workfort.dev${IMAGE}"
+          else
+            IMAGE_URL=""
+          fi
+
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "description=$DESCRIPTION" >> "$GITHUB_OUTPUT"
+          echo "image_url=$IMAGE_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Setup mise
+        if: steps.detect.outputs.found == 'true'
+        uses: jdx/mise-action@v3
+        with:
+          cache: true
+
+      - name: Post to Discord
+        if: steps.detect.outputs.found == 'true'
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+          POST_TITLE: ${{ steps.detect.outputs.title }}
+          POST_URL: ${{ steps.detect.outputs.url }}
+          POST_DESC: ${{ steps.detect.outputs.description }}
+          POST_IMAGE: ${{ steps.detect.outputs.image_url }}
+        run: |
+          ARGS="--title \"$POST_TITLE\" --url \"$POST_URL\" --description \"$POST_DESC\""
+          if [ -n "$POST_IMAGE" ]; then
+            ARGS="$ARGS --image \"$POST_IMAGE\""
+          fi
+          eval mise run discord:announce-blog -- $ARGS

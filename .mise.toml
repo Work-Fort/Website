@@ -143,3 +143,48 @@ export GEMINI_API_KEY=$(sops -d secrets.yaml | yq .gemini_api_key)
 export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
 python scripts/generate-image-nanobana.py "$@" --size 1792x1024
 """
+
+# Discord announcement for new blog posts
+[tasks."discord:announce-blog"]
+description = "Post blog announcement to Discord - Usage: mise run discord:announce-blog -- --title 'text' --url 'url' --description 'text' [--image 'url']"
+run = """
+export DISCORD_WEBHOOK_URL=$(sops -d secrets.yaml | yq .discord_blog_announce_webhook)
+
+if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+  echo "Error: discord-blog-announce-webhook not found in secrets.yaml"
+  exit 1
+fi
+
+# Parse arguments
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --title) POST_TITLE="$2"; shift 2;;
+    --url) POST_URL="$2"; shift 2;;
+    --description) POST_DESC="$2"; shift 2;;
+    --image) POST_IMAGE="$2"; shift 2;;
+    *) shift;;
+  esac
+done
+
+PAYLOAD=$(jq -n \
+  --arg title "$POST_TITLE" \
+  --arg url "$POST_URL" \
+  --arg desc "$POST_DESC" \
+  --arg img "${POST_IMAGE:-}" \
+  '{
+    embeds: [{
+      title: $title,
+      url: $url,
+      description: $desc,
+      color: 62719,
+      image: (if $img != "" then { url: $img } else null end),
+      footer: { text: "workfort.dev" }
+    }]
+  }')
+
+curl -sf -X POST "$DISCORD_WEBHOOK_URL" \
+  -H "Content-Type: application/json" \
+  -d "$PAYLOAD"
+
+echo "Posted to Discord: $POST_TITLE"
+"""
