@@ -662,10 +662,8 @@ a:not(.button):hover {
    BLOG AUTHOR PAGE
    ============================================ */
 .author-as-h1_n9oJ .avatar__photo {
-  width: 128px;
-  height: 128px;
-  border: 1px solid var(--cyan);
-  box-shadow: var(--cyan-glow);
+  width: 192px;
+  height: 192px;
 }
 
 /* ============================================
