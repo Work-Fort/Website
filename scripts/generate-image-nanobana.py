@@ -39,6 +39,11 @@ def main():
         default="1792x1024",
         help="Image size (e.g., 1024x1024, 1792x1024). Supported sizes vary by model.",
     )
+    parser.add_argument(
+        "--no-enhance",
+        action="store_true",
+        help="Skip Kimi K2.5 prompt enhancement and use the prompt as-is",
+    )
 
     args = parser.parse_args()
 
@@ -68,12 +73,16 @@ def main():
         )
         sys.exit(1)
 
-    # Enhance prompt using Kimi K2.5
-    try:
-        enhanced_prompt = enhance_prompt(args.prompt, novita_api_key)
-    except Exception as e:
-        print(f"Warning: Prompt enhancement failed, using original prompt. {e}", file=sys.stderr)
+    # Enhance prompt using Kimi K2.5 (unless --no-enhance)
+    if args.no_enhance:
+        print("Skipping prompt enhancement (--no-enhance)")
         enhanced_prompt = args.prompt
+    else:
+        try:
+            enhanced_prompt = enhance_prompt(args.prompt, novita_api_key)
+        except Exception as e:
+            print(f"Warning: Prompt enhancement failed, using original prompt. {e}", file=sys.stderr)
+            enhanced_prompt = args.prompt
 
     # Configure the client
     client = genai.Client(api_key=api_key)
