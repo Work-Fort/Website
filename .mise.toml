@@ -188,3 +188,11 @@ curl -sf -X POST "$DISCORD_WEBHOOK_URL" \
 
 echo "Posted to Discord: $POST_TITLE"
 """
+
+# Prompt advisor using Kimi K2.5
+[tasks.advise-prompt]
+description = "Get prompt advice from Kimi K2.5 - Usage: mise run advise-prompt -- --prompt 'your idea'"
+run = """
+export NOVITA_API_KEY=$(sops -d secrets.yaml | yq .novita_api_key)
+python scripts/advise_prompt.py "$@"
+"""
