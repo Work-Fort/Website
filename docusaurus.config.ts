@@ -20,7 +20,8 @@ const config: Config = {
   baseUrl: '/',
 
   // Trailing slash configuration for S3/CloudFront
-  trailingSlash: false,
+  // true = builds blog/day-four/index.html (matches CloudFront URL rewrite function)
+  trailingSlash: true,
 
   onBrokenLinks: 'throw',
 
