@@ -144,6 +144,9 @@ export default function BrandGuide() {
 
               <h3>For Builders</h3>
               <p>Audience is developers and AI researchers. Assume technical literacy.</p>
+
+              <h3>Carbon & Silicon</h3>
+              <p>Humans are carbon-based team members. AIs are silicon-based team members. Not "users and tools" — teammates with different substrates. This language reinforces that WorkFort is an organization where AIs and humans collaborate as peers, not a product where humans use AI as a feature.</p>
             </div>
           </section>
 
